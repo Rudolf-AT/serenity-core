@@ -89,4 +89,15 @@ public class WhenFilteringARequirementsTreeByTags {
         assertThat(jsonTree.size(), is(0));
     }
 
+    @Test
+    public void should_list_all_for_empty_tag() throws IOException {
+        FileSystemRequirements fileSystemRequirements = new FileSystemRequirements(featuresDirectory.getPath());
+        RequirementsOutcomes outcomes = fileSystemRequirements.getRequirementsOutcomeFactory().buildRequirementsOutcomesFrom(TestOutcomeLoader.testOutcomesIn(outcomeDirectory));
+        List<Requirement> requirements = outcomes.getRequirements();
+
+        JSONRequirementsTree tree = JSONRequirementsTree.forRequirements(requirements, outcomes, "");
+        JsonNode jsonTree = new ObjectMapper().readValue(tree.asString(), JsonNode.class);
+        assertThat(jsonTree.get(0).get("nodes"), is(2));
+    }
+
 }
